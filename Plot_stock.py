@@ -1,32 +1,29 @@
-# Import yfinance package
 import yfinance as yf
+import pandas as pd
 import matplotlib.pyplot as plt
 
 # Set the start and end date
 start_date = '1990-01-01'
 end_date = '2024-08-1'
 
-# Set the ticker
-ticker = 'AMZN'
+# Define the ticker list
+tickers_list = ['AAPL', 'IBM', 'MSFT', 'WMT']
 
-# Get the data
-data = yf.download(ticker, start_date, end_date, group_by=ticker, auto_adjust=False)[ticker]
+# Create placeholder for data
+data = pd.DataFrame(columns=tickers_list)
 
-data['Adj Close'].plot(figsize=(10, 7))
+# Fetch the data
+for ticker in tickers_list:
+    data[ticker] = yf.download(ticker,
+                               start_date,
+                               end_date, auto_adjust=False)['Adj Close']
 
+data.plot(figsize=(10, 7))
 
-# Define the label for the title of the figure
-plt.title("Adjusted Close Price of %s" % ticker, fontsize=16)
-
-
-# Define the labels for the x-axis and y-axis
-plt.ylabel('Price', fontsize=14)
-plt.xlabel('Year', fontsize=14)
-
-
-# Plot the grid lines
-plt.grid(which="major", color='k', linestyle='-.', linewidth=0.5)
-
+# Add labels and title
+plt.xlabel('Year')
+plt.ylabel('Price')
+plt.title('Adjusted close price of stocks')
 
 # Show the plot
 plt.show()
